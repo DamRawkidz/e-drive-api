@@ -9,7 +9,7 @@
 FROM registry.71dev.com/dotnetsdk:8.0 as build-env
 WORKDIR /source
 COPY . .
-RUN dotnet restore --configfile nuget.config
+
 RUN dotnet publish -o /publish --configuration Release ;
 FROM registry.71dev.com/dotnetaspnet:8.0
 WORKDIR /app
