@@ -1,8 +1,17 @@
-FROM  mcr.microsoft.com/dotnet/sdk:8.0 AS build
+# FROM  mcr.microsoft.com/dotnet/sdk:8.0 AS build
+# WORKDIR /source
+# COPY . .
+# RUN dotnet publish -o /publish --configuration Release ;
+# FROM mcr.microsoft.com/dotnet/aspnet:8.0
+# WORKDIR /app
+# COPY --from=build-env /publish .
+# ENV ASPNETCORE_URLS http://*:8080
+FROM registry.71dev.com/dotnetsdk:8.0 as build-env
 WORKDIR /source
 COPY . .
+RUN dotnet restore --configfile nuget.config
 RUN dotnet publish -o /publish --configuration Release ;
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM registry.71dev.com/dotnetaspnet:8.0
 WORKDIR /app
 COPY --from=build-env /publish .
 ENV ASPNETCORE_URLS http://*:8080
