@@ -1,5 +1,0 @@
-dotnet ef migrations add ....
-dotnet ef database update
-
-sudo docker build -f DockerFile  -t phetdev/e-drives-api:dev .
-sudo docker push phetdev/e-drives-api:dev
