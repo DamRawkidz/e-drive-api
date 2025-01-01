@@ -9,18 +9,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+
 using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
-// using SeventyOneDev.Utilities;
-// using samitivej_api.Modules.Security.Models;
-// using samitivej_api.Modules.Context;
-// using samitivej_api.Modules.Health.Configures;
-// using samitivej_api.Modules.Services;
-// using samitivej_api.Modules.Setting.Configures;
+
 using IPNetwork = Microsoft.AspNetCore.HttpOverrides.IPNetwork;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +23,10 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<CompanyInfoService>();
 builder.Services.AddScoped<AuthenticationService>();
 builder.Services.AddScoped<EmployeeService>();
+builder.Services.AddScoped<UserService>();
+builder.Services.Configure<jwt_config>(
+    builder.Configuration.GetSection("jwt_config")
+    );
 builder.Services.AddDbContext<EdriveDb>(options =>
 {
     options.UseNpgsql(builder.Configuration["Databases:Postgres"]);
@@ -39,6 +34,8 @@ builder.Services.AddDbContext<EdriveDb>(options =>
     ServiceLifetime.Transient
 );
 var app = builder.Build();
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 
 
 
@@ -91,10 +88,12 @@ app.UseCors(builder => builder
     .AllowAnyHeader());
 app.MapControllers();
 app.UseRouting();
+// app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapDefaultControllerRoute();
 });
+
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)

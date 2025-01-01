@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace e_drive_api.Migrations
 {
     [DbContext(typeof(EdriveDb))]
-    partial class EdriveDbModelSnapshot : ModelSnapshot
+    [Migration("20250101083659_username")]
+    partial class username
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -205,7 +208,7 @@ namespace e_drive_api.Migrations
                     b.Property<string>("password")
                         .HasColumnType("text");
 
-                    b.Property<string>("passwordHash")
+                    b.Property<string>("paswordHash")
                         .HasColumnType("text");
 
                     b.Property<string>("update_by")
