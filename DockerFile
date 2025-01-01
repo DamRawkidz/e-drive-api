@@ -1,18 +1,18 @@
-# FROM  mcr.microsoft.com/dotnet/sdk:8.0 AS build
-# WORKDIR /source
-# COPY . .
-# RUN dotnet publish -o /publish --configuration Release ;
-# FROM mcr.microsoft.com/dotnet/aspnet:8.0
-# WORKDIR /app
-# COPY --from=build-env /publish .
-# ENV ASPNETCORE_URLS http://*:8080
-FROM registry.71dev.com/dotnetsdk:8.0 as build-env
+
+# FROM registry.71dev.com/dotnetsdk:8.0 as build-env
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /source
 COPY . .
 
-RUN dotnet publish -o /publish --configuration Release ;
-FROM registry.71dev.com/dotnetaspnet:8.0
+RUN dotnet publish -o /publish --configuration Release;
+FROM mcr.microsoft.com/dotnet/sdk:8.0
 WORKDIR /app
 COPY --from=build-env /publish .
+EXPOSE 8080
 ENV ASPNETCORE_URLS http://*:8080
+# RUN sed -i 's/DEFAULT@SECLEVEL=2/DEFAULT@SECLEVEL=1/g' /etc/ssl/openssl.cnf
+RUN sed -i 's/DEFAULT@SECLEVEL=2/DEFAULT@SECLEVEL=1/g' /etc/ssl/openssl.cnf
+RUN sed -i 's/MinProtocol = TLSv1.2/MinProtocol = TLSv1/g' /etc/ssl/openssl.cnf
+RUN sed -i 's/DEFAULT@SECLEVEL=2/DEFAULT@SECLEVEL=1/g' /usr/lib/ssl/openssl.cnf
+RUN sed -i 's/MinProtocol = TLSv1.2/MinProtocol = TLSv1/g' /usr/lib/ssl/openssl.cnf
 ENTRYPOINT ["dotnet", "e-drive-api.dll"]
